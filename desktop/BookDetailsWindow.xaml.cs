@@ -1,49 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace BookCatalog
 {
-    /// <summary>
-    /// Interaction logic for BookDetailsWindow.xaml
-    /// </summary>
     public partial class BookDetailsWindow : Window
     {
+        private Book CurrentBook;
+
         public BookDetailsWindow(Book book)
         {
             InitializeComponent();
-            DataContext = book;
+            CurrentBook = book;
+            DataContext = CurrentBook;
             if (API.LoggedIn) actionsPanel.Visibility = Visibility.Visible;
         }
 
         private async void editButton_Click(object sender, RoutedEventArgs e)
         {
-            BookEditorWindow editor = new BookEditorWindow(DataContext as Book);
+            BookEditorWindow editor = new BookEditorWindow(CurrentBook);
             try
             {
-                if ((bool)editor.ShowDialog()) await API.SendBook(editor.Book, true);
-                DialogResult = true;
+                if (editor.ShowDialog() == true)
+                {
+                    await API.SendBook(editor.BookToEdit, true);
+                    DialogResult = true;
+                    this.Close();
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private async void deleteButton_Click(object sender, RoutedEventArgs e)
         {
-            await API.DeleteBook((DataContext as Book).Id);
-            DialogResult = true;
+            if (MessageBox.Show("Are you sure you want to delete this book?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    await API.DeleteBook(CurrentBook.Id);
+                    DialogResult = true;
+                    this.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
     }
 }

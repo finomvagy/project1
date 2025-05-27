@@ -1,0 +1,38 @@
+﻿<Window x:Class="BookCatalog.CategoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BookCatalog"
+        mc:Ignorable="d"
+        Title="Manage Categories" Height="400" Width="500" Loaded="Window_Loaded">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+            <Label Content="Category Name:" VerticalAlignment="Center"/>
+            <TextBox x:Name="categoryNameTextBox" Width="200" Margin="5,0,0,0" VerticalAlignment="Center"/>
+            <Button x:Name="addCategoryButton" Content="Add New" Click="addCategoryButton_Click" Margin="10,0,0,0" Padding="5"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <Button x:Name="editCategoryButton" Content="Edit Selected" Click="editCategoryButton_Click" Margin="0,0,5,0" Padding="5" IsEnabled="False"/>
+            <Button x:Name="deleteCategoryButton" Content="Delete Selected" Click="deleteCategoryButton_Click" Margin="0,0,0,0" Padding="5" IsEnabled="False"/>
+        </StackPanel>
+
+        <ListBox x:Name="categoriesListBox" Grid.Row="2" SelectionChanged="categoriesListBox_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Button Grid.Row="3" Content="Close" Click="CloseButton_Click" HorizontalAlignment="Right" Margin="0,10,0,0" Padding="10,5"/>
+    </Grid>
+</Window>
